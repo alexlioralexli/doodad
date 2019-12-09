@@ -29,7 +29,7 @@ class Local(LaunchMode):
         self.env = {}
         self.skip_wait = skip_wait
 
-    def launch_command(self, cmd, mount_points=None, dry=False, verbose=False):
+    def launch_command(self, cmd, mount_points=None, dry=False, verbose=False, gpu_id=None):
         if dry:
             print(cmd); return
 
@@ -57,6 +57,9 @@ class Local(LaunchMode):
         # add pythonpath mounts
         if py_path:
             commands.append('export PYTHONPATH=$PYTHONPATH:%s' % (':'.join(py_path)))
+
+        if gpu_id is not None:  #added by AL 12/8/19
+            commands.append('export CUDA_VISIBLE_DEVICES=%d' % gpu_id)
 
         # Add main command
         commands.append(cmd)
