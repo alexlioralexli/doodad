@@ -24,12 +24,13 @@ class LaunchMode(object):
 
 
 class Local(LaunchMode):
-    def __init__(self, skip_wait=False):
+    def __init__(self, skip_wait=False, gpu_id=None):
         super(Local, self).__init__()
         self.env = {}
         self.skip_wait = skip_wait
+        self.gpu_id = gpu_id
 
-    def launch_command(self, cmd, mount_points=None, dry=False, verbose=False, gpu_id=None):
+    def launch_command(self, cmd, mount_points=None, dry=False, verbose=False):
         if dry:
             print(cmd); return
 
@@ -58,8 +59,8 @@ class Local(LaunchMode):
         if py_path:
             commands.append('export PYTHONPATH=$PYTHONPATH:%s' % (':'.join(py_path)))
 
-        if gpu_id is not None:  #added by AL 12/8/19
-            commands.append('export CUDA_VISIBLE_DEVICES=%d' % gpu_id)
+        if self.gpu_id is not None:  #added by AL 12/8/19
+            commands.append('export CUDA_VISIBLE_DEVICES=%d' % self.gpu_id)
 
         # Add main command
         commands.append(cmd)
